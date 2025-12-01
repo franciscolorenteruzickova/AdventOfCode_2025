@@ -11,8 +11,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    ifstream file(argv[1]);
-    if (!file) {
+    ifstream archivo(argv[1]);
+    if (!archivo) {
         cerr << "No se pudo abrir " << argv[1] << "\n";
         return 1;
     }
@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     int pos = 50;
     int contzero = 0;
 
-    while (file >> s) {
+    while (archivo >> s) {
         char dir = s[0];
         int dist = stoi(s.substr(1));
 
@@ -34,11 +34,11 @@ int main(int argc, char* argv[]) {
             }
             // Contar cuántas veces se cruza 0 al girar a la izquierda
             for (int i = 1; i <= dist; ++i) {
-                int tmp = (actual - i) % 100; // Posición intermedia
-                if (tmp < 0) {
-                    tmp += 100;
+                int aux = (actual - i) % 100; // Posición intermedia
+                if (aux < 0) {
+                    aux += 100;
                 }
-                if (tmp == 0) {
+                if (aux == 0) {
                     contzero++;
                 }
             }
@@ -47,8 +47,8 @@ int main(int argc, char* argv[]) {
 
             // Contar cuántas veces se cruza 0 al girar a la derecha
             for (int i = 1; i <= dist; ++i) {
-                int tmp = (actual + i) % 100;
-                if (tmp == 0) {
+                int aux = (actual + i) % 100;
+                if (aux == 0) {
                     contzero++;
                 }
             }

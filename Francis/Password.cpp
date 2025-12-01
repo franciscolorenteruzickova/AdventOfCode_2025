@@ -12,15 +12,15 @@ int main(int argc, char* argv[]) {
         cerr << "Uso: programa input.txt\n";
         return 1;
     }
-    ifstream file(argv[1]);
-    if (!file) {
+    ifstream archivo(argv[1]);
+    if (!archivo) {
         cerr << "No se pude abrir " << argv[1] << "\n";
         return 1;
     }
 
     string s;
     int pos = 50, contzero = 0;
-    while (file >> s) {
+    while (archivo >> s) {
         char dir = s[0];
         int dist = stoi(s.substr(1));
             if (dir == 'L' ) {
