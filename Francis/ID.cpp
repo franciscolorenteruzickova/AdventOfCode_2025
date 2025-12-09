@@ -35,7 +35,6 @@ int main() {
 
     string carc;
     stringstream inter(linea);
-
     long long suma = 0;
 
     // Leer cada rango a-b
