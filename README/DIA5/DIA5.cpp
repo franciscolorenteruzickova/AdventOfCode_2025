@@ -123,7 +123,9 @@ int main() {
     // Contar IDs frescos
     int idsCount = 0;
     for (long long id : ids) {
-        if (searchID(ranges, newSize, id)) idsCount++;
+        if (searchID(ranges, newSize, id)) {
+            idsCount++;
+        }
     }
 
     cout << idsCount << endl;
