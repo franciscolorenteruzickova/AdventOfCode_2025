@@ -70,10 +70,16 @@ int main() {
         for (int c = 0; c < cols; c++) {
             Node* node = nodes[r][c];
             if (node->valor == '.' || node->valor == 'S') {
-                if (r + 1 < fila) node->vecinos.push_back(nodes[r + 1][c]);
+                if (r + 1 < fila) {
+                    node->vecinos.push_back(nodes[r + 1][c]); // Nos movemos abajo
+                }
             } else if (node->valor == '^') {
-                if (r + 1 < fila && c - 1 >= 0) node->vecinos.push_back(nodes[r + 1][c - 1]);
-                if (r + 1 < fila && c + 1 < cols) node->vecinos.push_back(nodes[r + 1][c + 1]);
+                if (r + 1 < fila && c - 1 >= 0) {
+                    node->vecinos.push_back(nodes[r + 1][c - 1]);  // Split abajo izquierda
+                }
+                if (r + 1 < fila && c + 1 < cols) {
+                    node->vecinos.push_back(nodes[r + 1][c + 1]);  // Split abajo derecha
+                }
             }
         }
     }
@@ -94,6 +100,7 @@ int main() {
         return 1;
     }
 
+    // Matriz de visitados para evitar un nodo dos veces
     vector<vector<bool>> visitado(fila, vector<bool>(cols, false));
     int splits = 0;
 
