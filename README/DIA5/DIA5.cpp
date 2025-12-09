@@ -92,7 +92,7 @@ int main() {
 
     string line;
 
-    // Leemos los intervalos
+    
     while (getline(file, line)) {
         if (line.empty()) { 
             break;
@@ -105,7 +105,7 @@ int main() {
         
     }
 
-    // Leemos los IDs
+    
     while (getline(file, line)) {
         if (!line.empty()) {;
         ids.push_back(stoll(line));
