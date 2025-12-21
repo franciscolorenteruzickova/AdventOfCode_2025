@@ -3,7 +3,7 @@
 <img width="1240" height="698" alt="imagen" src="https://github.com/franciscolorenteruzickova/AdventOfCode_2025/blob/ebdd2d9828d521558233c3d225f813648ca2a02c/README/IMG_5614.jpg" />
 ---
 
-## Equipo ```AOC``` :
+## Equipo ```AOC Warriors``` :
   - Francisco Lorente Ruzickova
   - Rida  Ballaoui Bouddih
   - Jesús Mochales Domingo
