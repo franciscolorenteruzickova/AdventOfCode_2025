@@ -1,133 +1,143 @@
 #include <iostream>
-#include <vector>
-#include <sstream>
 #include <fstream>
+#include <string>
+
 using namespace std;
 
-//F MergeSort para ordenar los intervalos
-void merge(vector<pair<long long, long long>> &arr, int left, int mid, int right) {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
+/*
+ * Clase RangeNode: Nodo de un árbol binario que representa un rango de IDs frescos [start, end]
+ */
+class RangeNode {
+public:
+    long long start, end;  // Inicio y fin del rango
+    RangeNode* left;
+    RangeNode* right;
 
-    vector<pair<long long,long long>> L(n1);
-    vector<pair<long long,long long>> R(n2);
+    RangeNode(long long s, long long e) : start(s), end(e), left(nullptr), right(nullptr) {}
 
-    for (int i = 0; i < n1; i++) {
-        L[i] = arr[left + i];
-    }
-    for (int i = 0; i < n2; i++) {
-        R[i] = arr[mid + 1 + i];
-    }
-
-    int i = 0, j = 0, k = left;
-
-    while (i < n1 && j < n2) {
-        if (L[i].first <= R[j].first) {
-            arr[k++] = L[i++];
-        } else {
-            arr[k++] = R[j++];
+    /*
+     * Inserta un nuevo rango [s, e] en el árbol
+     * Si el rango está completamente a la izquierda o derecha, se inserta en el hijo correspondiente
+     * Si se solapa con este nodo, se fusiona (se expande el rango actual)
+     */
+    void insertRange(long long s, long long e) {
+        if (e < start - 1) { // Rango completamente a la izquierda
+            if (!left) {
+                left = new RangeNode(s, e);
+            } else {
+                left->insertRange(s, e);
+            }
+        } else if (s > end + 1) { // Rango completamente a la derecha
+            if (!right) {
+                right = new RangeNode(s, e);
+            } else {
+                right->insertRange(s, e);
+            }
+        } else { // Rango solapado, entonces fusionar con este nodo
+            start = min(start, s);
+            end = max(end, e);
         }
     }
 
-    while (i < n1) {
-        arr[k++] = L[i++];
-    }
-    while (j < n2) {
-        arr[k++] = R[j++];
-    }
-}
-
-void mergeSort(vector<pair<long long,long long>> &arr, int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left)/2;
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-        merge(arr, left, mid, right);
-    }
-}
-// Fusión de los intervalos para reducir la cantidad de comparaciones
-int newRange(vector<pair<long long,long long>> &ranges) {
-    if (ranges.empty()) {
-        return 0;
-    }
-
-    int idx = 0;
-    for (int i = 1; i < ranges.size(); i++) {
-        if (ranges[idx].second < ranges[i].first - 1) {
-            idx++;
-            ranges[idx] = ranges[i];
+    /*
+     * Verifica si un ID está dentro de este rango o en alguno de los hijos
+     */
+    bool contains(long long id) const {
+        if (id >= start && id <= end) { // ID dentro de este rango
+            return true;
+        } else if (id < start && left) { // Buscar en hijo izquierdo
+            return left->contains(id);
+        } else if (id > end && right) { // Buscar en hijo derecho
+            return right->contains(id);
         } else {
-            ranges[idx].second = max(ranges[idx].second, ranges[i].second);
-        }
-    }
-    return idx + 1;
-}
-// Encontrar si un ID está dentro de algún intervalo usando búsqueda binaria
-bool searchID(const vector<pair<long long,long long>> &ranges, int size, long long id) {
-    int l = 0, r = size - 1;
-    int pos = -1;
-
-    while (l <= r) {
-        int mid = (l + r) / 2;
-        if (ranges[mid].first <= id) {
-            pos = mid;
-            l = mid + 1;
-        } else {
-            r = mid - 1;
+            return false;
         }
     }
 
-    return (pos != -1 && id <= ranges[pos].second);
-}
+    // Destructor recursivo para liberar memoria
+    ~RangeNode() {
+        delete left;
+        delete right;
+    }
+};
 
-int main() {
-    vector<pair<long long,long long>> ranges;
-    vector<long long> ids;
+/*
+ * Clase IngredientTree: Árbol binario que representa la base de datos de ingredientes frescos
+ */
+class IngredientTree {
+private:
+    RangeNode* root;
 
-    ifstream file("ID.txt");
-    if (!file) {
-        cerr << "No se pudo abrir ID.txt" << endl;
+public:
+    IngredientTree() : root(nullptr) {}
+
+    /*
+     * Agrega un rango [s, e] al árbol
+     */
+    void addRange(long long s, long long e) {
+        if (!root) {
+            root = new RangeNode(s, e);
+        } else {
+            root->insertRange(s, e);
+        }
+    }
+
+    /*
+     * Verifica si un ID está dentro de algún rango fresco
+     */
+    bool isFresh(long long id) const {
+        if (!root) {
+            return false;
+        } else {
+            return root->contains(id);
+        }
+    }
+
+    // Destructor para liberar memoria
+    ~IngredientTree() {
+        delete root;
+    }
+};
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cout << "Uso: ./DIA5 archivo.txt\n";
         return 1;
     }
 
+    ifstream file(argv[1]);
+    if (!file.is_open()) {
+        cout << "No se pudo abrir el archivo\n";
+        return 1;
+    }
+
+    IngredientTree tree;   // Árbol para almacenar los rangos
     string line;
+    bool readingRanges = true; // Bandera para saber si estamos leyendo rangos o IDs disponibles
+    int freshCount = 0;        // Contador de IDs frescos encontrados
 
-    
     while (getline(file, line)) {
-        if (line.empty()) { 
-            break;
+        if (line.empty()) { // Línea vacía → cambiar a sección de IDs disponibles
+            readingRanges = false;
+            continue;
         }
-        long long pr, sc;
-        char gio;
-        stringstream ss(line);
-        ss >> pr >> gio >> sc;
-        ranges.push_back({pr, sc});
-        
-    }
 
-    
-    while (getline(file, line)) {
-        if (!line.empty()) {;
-        ids.push_back(stoll(line));
+        if (readingRanges) {
+            size_t dash = line.find('-');
+            long long s = stoll(line.substr(0, dash));
+            long long e = stoll(line.substr(dash + 1));
+            tree.addRange(s, e);
+        } else {
+            long long id = stoll(line);
+            if (tree.isFresh(id)) {
+                freshCount++;
+            }
         }
     }
-
     file.close();
 
-    // Ordenar los intervalos
-    if (!ranges.empty())
-        mergeSort(ranges, 0, ranges.size() - 1);
+    // Mostrar resultado: cantidad de IDs frescos disponibles
+    cout << "IDs frescos disponibles: " << freshCount << endl;
 
-    int newSize = newRange(ranges);
-
-    // Contar IDs frescos
-    int idsCount = 0;
-    for (long long id : ids) {
-        if (searchID(ranges, newSize, id)) {
-            idsCount++;
-        }
-    }
-
-    cout << idsCount << endl;
     return 0;
 }

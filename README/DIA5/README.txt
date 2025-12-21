@@ -1,35 +1,47 @@
-Este problema fue elegido porque permite aplicar y combinar varias técnicas
-fundamentales de algoritmos. En concreto, nos ofrece la oportunidad de
-implementar divide y vencerás mediante el algoritmo de ordenación MergeSort
-para ordenar los rangos de IDs, y también divide y vencerás mediante la
-búsqueda binaria para determinar si un ID pertenece a alguno de los rangos.
+Este problema fue seleccionado porque ofrece la oportunidad de implementar 
+árboles binarios para gestionar rangos solapados y realizar búsquedas de 
+pertenencia de manera eficiente.
 
-Se emplean principalmente técnicas de divide y vencerás: MergeSort ordena los
-rangos por su límite inferior, garantizando eficiencia O(n log n), y la
-búsqueda binaria verifica de manera eficiente si un ID pertenece a alguno de
-los rangos fusionados, con coste O(log n) por consulta.
+La solución se basa en modelar cada rango de IDs frescos como un nodo en un
+árbol binario de búsqueda. Cada nodo almacena un rango [inicio, fin] y
+referencias a sus hijos izquierdo y derecho, representando los rangos menores
+y mayores respectivamente. La inserción de un nuevo rango en el árbol sigue
+reglas claras: si el rango está completamente a la izquierda o a la derecha
+del nodo actual, se inserta en el hijo correspondiente; si se solapa con el
+rango del nodo actual, se fusiona extendiendo los límites del rango.
 
-La resolución del problema se ha abordado de la siguiente manera: primero se
-aplica MergeSort para ordenar los rangos por su límite inferior. A continuación,
-se recorren todos los rangos ordenados y se combinan los que se superponen,
-reduciendo el número total de intervalos a consultar. Por último, cada ID se
-comprueba mediante búsqueda binaria en los rangos fusionados para determinar si
-está “fresco”.
+La clase RangeNode encapsula la información de cada nodo y proporciona
+métodos para insertar rangos y verificar si un ID pertenece a algún rango.
+La clase IngredientTree actúa como contenedor del árbol, proporcionando
+una interfaz clara para agregar rangos y consultar IDs frescos sin exponer
+la estructura interna del árbol.
 
-Se han considerado y descartado algunas alternativas, como el uso de otros
-algoritmos de ordenación de mayor coste, o la comparación secuencial de cada ID
-con todos los rangos, que resultaba demasiado ineficiente para grandes
-conjuntos de datos. También se podría implementar un Interval Tree para
-acelerar consultas dinámicas, pero en un escenario estático esto resulta
-innecesario y aumenta la complejidad.
+El programa lee el archivo de entrada, separando la sección de rangos frescos
+de la sección de IDs disponibles, y va insertando los rangos en el árbol
+binario. Luego, para cada ID disponible, se verifica si pertenece a algún
+rango fresco utilizando la búsqueda descendente en el árbol. Esto permite
+manejar eficientemente rangos muy grandes sin necesidad de expandirlos en
+memoria, asegurando que cada consulta se realice en tiempo logarítmico en
+promedio.
 
-A nivel personal, se ha practicado el uso de técnicas de divide y vencerás,
-como MergeSort y búsqueda binaria. Este problema refleja situaciones reales
-de inventario y gestión de recursos, lo que lo hace significativo desde el
-punto de vista práctico y de aprendizaje.
+Se optó por esta representación mediante árbol binario frente a alternativas
+como tablas hash o listas lineales debido a que:
+
+Permite gestionar rangos que se pueden solapar y fusionar automáticamente.
+
+Mantiene consultas rápidas para IDs disponibles sin recorrer todos los
+rangos.
+
+Proporciona una estructura de datos limpia y orientada a objetos, fácil
+de mantener y ampliar.
+
+Desde un punto de vista de aprendizaje, este ejercicio refuerza conceptos de
+árboles binarios, fusión de rangos, búsqueda eficiente, y diseño de clases
+en C++. La implementación final es clara, modular y permite escalar a
+bases de datos de ingredientes mucho mayores.
 
 El código debe incluir todos los ficheros necesarios para su ejecución (input,
-tests, etc.). Para compilarlo
+tests, etc.). Para compilarlo:
 
 g++ DIA5.cpp -o DIA5
 
