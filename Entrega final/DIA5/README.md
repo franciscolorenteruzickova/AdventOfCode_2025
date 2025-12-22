@@ -12,7 +12,8 @@ Se ha empleado un arbol binario de intervalos (**Interval Tree**)
     };
 ```
 
-### Nodo 
+### Nodo
+<img src="nodo.jpg"/>
 ```cpp
     struct Node{
         Interval i;
