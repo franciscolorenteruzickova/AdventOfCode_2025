@@ -4,6 +4,7 @@ Se ha empleado un arbol binario de intervalos (**Interval Tree**)
     IntervalTree.h - Declaración de la estructura Interval (Struct), Node (Struct) y IntervalTree (Class).
     IntervalTree.cpp - Implementación completa del árbol de intervalos y sus operaciones.
 
+### Intervalo: [min, max]
 ```cpp
     struct Interval{
         long long min;
@@ -11,6 +12,7 @@ Se ha empleado un arbol binario de intervalos (**Interval Tree**)
     };
 ```
 
+### Nodo 
 ```cpp
     struct Node{
         Interval i;
