@@ -22,3 +22,15 @@ Se ha empleado un arbol binario de intervalos (**Interval Tree**)
         Node *left, *right;
     };
 ```
+
+### Arbol binario de intervalos (Interval tree)
+
+Se implementa con punteros como la mayoria de las estructuras de datos de nodos
+
+```cpp
+    class IntervalTree{
+        private:
+            Node *root;
+            int n; //Tamaño del arbol (Numero de intervalos)
+    };
+```
