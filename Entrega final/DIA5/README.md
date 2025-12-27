@@ -13,7 +13,7 @@ Se ha empleado un arbol binario de intervalos (**Interval Tree**)
 ```
 
 ### Nodo
-<img src="nodo.jpg"/>
+<img src="src/nodo.jpg"/>
 
 ```cpp
     struct Node{

@@ -75,7 +75,7 @@ bool IntervalTree::search(Node *node, long long ID) const{
   return search(node->right, ID);
 }
 
-bool comparator(const Interval &a, const Interval &b){
+bool comparator(Interval a, Interval b){
   return a.min < b.min;
 }
 
@@ -113,6 +113,20 @@ Node* IntervalTree::buildBalanced(vector<Interval> &intervals, int start, int en
   return node;
 }
 
+long long IntervalTree::dfs(){
+  long long IDs = 0;
+  preorderTraversal(root, &IDs);
+  return IDs;
+}
+
+void IntervalTree::preorderTraversal(Node *node, long long *IDs){
+  if(node == nullptr){
+    return ;
+  }
+  *IDs += node->i.max - node->i.min + 1;
+  preorderTraversal(node->left, IDs);
+  preorderTraversal(node->right, IDs);
+}
 
 bool IntervalTree::empty(){
   if(n==0){

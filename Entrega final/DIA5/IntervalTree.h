@@ -23,19 +23,21 @@ class IntervalTree{
     Node *root;
     int n;
     
-    Node* insert(Node *node, long long _min, long long _max); //OK
-    bool overlaps(const Interval& a, long long ID) const; //OK
-    bool search(Node *node, long long ID) const; //OK
-    void deleteTree(Node *node); //OK
-    Node* buildBalanced(vector<Interval> &intervals, int _min, int _max); //Ok
+    Node* insert(Node *node, long long _min, long long _max);
+    bool overlaps(const Interval& a, long long ID) const;
+    bool search(Node *node, long long ID) const;
+    void deleteTree(Node *node);
+    Node* buildBalanced(vector<Interval> &intervals, int _min, int _max);
+    void preorderTraversal(Node *node, long long *IDs);
   public:
-    IntervalTree(); //OK
-    ~IntervalTree(); //OK
-    void insert(long long _min, long long _max); //OK
+    IntervalTree();
+    ~IntervalTree();
+    void insert(long long _min, long long _max);
     bool contains(long long ID) const;
-    void buildFromIntervals(vector<Interval> &intervals); //OK
-    bool empty(); //OK
-    int size(); //OK
+    void buildFromIntervals(vector<Interval> &intervals);
+    long long dfs();
+    bool empty();
+    int size();
 };
 
 #endif
