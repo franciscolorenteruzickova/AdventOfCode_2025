@@ -29,8 +29,8 @@ int main(){
   sort(intervals.begin(), intervals.end(), mincomparator);
   vector<Interval> noIntersection;
   noIntersection.push_back(intervals[0]);
-  for(int i = 1; i < intervals.size(); i++) {
-    if (intervals[i].min <= noIntersection[noIntersection.size()-1].max + 1) {
+  for(int i = 1; i < intervals.size(); i++){
+    if (intervals[i].min <= noIntersection[noIntersection.size()-1].max){
       noIntersection[noIntersection.size()-1].max = max(noIntersection[noIntersection.size()-1].max, intervals[i].max);
     }
     else{
